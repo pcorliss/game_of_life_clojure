@@ -16,9 +16,23 @@
   (testing "a single cell dies with one neighbor"
     (is (= (tick {:x 1 :y 1} {:x 0 :y 0} ) [] )))
 
-  (testing "a single cell lives with two neighbors"
-    (is (= (tick {:x 1 :y 1} {:x 0 :y 0} {:x 2 :y 2} ) [{:x 1 :y 1}] )))
+  ;(testing "a single cell lives with two neighbors"
+    ;(is (= (tick {:x 1 :y 1} {:x 0 :y 0} {:x 2 :y 2} ) [{:x 1 :y 1}] )))
 
+  (testing "cell neighbors"
+    (is (= (neighbor? {:x  1 :y -1} {:x 0 :y 0}) true))
+    (is (= (neighbor? {:x  1 :y  0} {:x 0 :y 0}) true))
+    (is (= (neighbor? {:x  1 :y  1} {:x 0 :y 0}) true))
+    (is (= (neighbor? {:x  0 :y -1} {:x 0 :y 0}) true))
+    (is (= (neighbor? {:x  0 :y  1} {:x 0 :y 0}) true))
+    (is (= (neighbor? {:x -1 :y -1} {:x 0 :y 0}) true))
+    (is (= (neighbor? {:x -1 :y  0} {:x 0 :y 0}) true))
+    (is (= (neighbor? {:x -1 :y  1} {:x 0 :y 0}) true)))
+
+  (testing "non-neighbors"
+    (is (= (neighbor? {:x  0 :y  0} {:x 0 :y 0}) false))
+    (is (= (neighbor? {:x  0 :y  0} {:x 2 :y 0}) false))
+    (is (= (neighbor? {:x  0 :y  0} {:x 0 :y 2}) false)))
   ;Any live cell with two or three live neighbours lives on to the next generation.
   ;Any live cell with more than three live neighbours dies, as if by overcrowding.
   ;Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
