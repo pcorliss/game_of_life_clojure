@@ -35,7 +35,10 @@
 (defn survive?
   "applies game of life rules to a cell"
   [cell]
-  (>= (val cell) 2 ))
+  (let [cell-neighbor-count (val cell)]
+  (and
+    (<  cell-neighbor-count 4)
+    (>= cell-neighbor-count 2 ))))
 
 (defn tick
   "Increments the game state"
@@ -49,10 +52,3 @@
           {}
           (or (combo/combinations cells 2) [] ))))
     ()))
-
-;; each cell combination
-;; test if a cell is a neighbor of another cell
-;; if it is increment a counter
-;; iterate through counter hash
-;; if < 2 it dies
-;; if >= 2 it lives

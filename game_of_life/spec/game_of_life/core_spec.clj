@@ -23,6 +23,15 @@
   (it "a single cell lives with two neighbors"
     (should= [{:x 1 :y 1}] (tick {:x 1 :y 1} {:x 0 :y 0} {:x 2 :y 2})))
 
+  (it "a single cell lives with three neighbors"
+    (should= [{:x 1 :y 1}] (tick {:x 1 :y 1} {:x 0 :y 2} {:x 0 :y 0} {:x 2 :y 2})))
+
+  (it "a single cell dies with four neighbors"
+    (should= [] (tick {:x 1 :y 1} {:x 0 :y 2} {:x 2 :y 0} {:x 0 :y 0} {:x 2 :y 2})))
+
+  (it "a single cell springs to life if it has three neighbors"
+    (should= [{:x 1 :y 1}] (tick {:x 2 :y 0} {:x 0 :y 0} {:x 2 :y 2})))
+
   (it "cell neighbors"
     (should (neighbor? {:x  1 :y -1} {:x 0 :y 0}))
     (should (neighbor? {:x  1 :y  0} {:x 0 :y 0}))
