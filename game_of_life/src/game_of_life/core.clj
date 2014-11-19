@@ -54,20 +54,22 @@
   "Increments the game state"
   [cells]
   (let [neighbor-count (reduce cell-neighbor-counter {} cells) ]
-    (concat
-      (keys
+    (distinct
+      (concat
+        (keys
+          (filter
+            birth?
+            neighbor-count))
         (filter
-          birth?
-          neighbor-count))
-      (filter
-        #(survive? (map-get-int % neighbor-count))
-        cells))))
+          #(survive? (map-get-int % neighbor-count))
+          cells)))))
 
 (def RESET "\33[2J")
 
 (defn print-grid
+  "prints the ascii representation of the grid"
   [x1 y1 x2 y2 cells]
-  ;(print (format "%s" RESET))
+  (print (format "%s" RESET))
   (let [cell-set (set cells)]
     (doseq [y (range y1 y2)]
       (doseq [x (range x1 x2)]
@@ -77,11 +79,18 @@
       (println ""))
     (flush)))
 
+(defn random-cells
+  "generates n random cells within a bounding box"
+  [number x1 y1 x2 y2]
+  (map
+    #(or {:x (+ x1 (rand-int x2)) :y (+ y1 (rand-int y2))} %)
+    (range number)))
 
 (defn -main
   "Displays and advances game of life"
   [& args]
-  (loop [cells [{:x 3 :y 3} {:x 3 :y 4} {:x 4 :y 3} {:x 5 :y 3}]]
-    (print-grid 0 0 10 10 cells)
-    (Thread/sleep 1000)
-    (recur (tick cells))))
+  (loop [cells (random-cells 50 0 0 10 10)]
+    (when (> (count cells) 0)
+      (print-grid -30 -10 30 10 cells)
+      (Thread/sleep 100)
+      (recur (tick cells)))))

@@ -23,6 +23,27 @@
 
   (it "a single cell springs to life if it has three neighbors"
     (should= [{:x 1 :y 1}] (tick [{:x 2 :y 0} {:x 0 :y 0} {:x 2 :y 2}])))
-  )
 
+  ;0 0
+  ;0 0
+  ;0 0
+  (def box [  {:x 1 :y 1}
+              {:x 1 :y 2}
+              {:x 1 :y 3}
+              {:x 2 :y 1}
+              {:x 2 :y 2}
+              {:x 2 :y 3}])
+
+  ;  0
+  ;0 0
+  ;0
+  (def tetris-piece [  {:x 1 :y 1}
+                       {:x 1 :y 2}
+                       {:x 2 :y 2}
+                       {:x 2 :y 3}])
+
+  (it "doesn't return duplicate cells"
+    (should= (count box) (count (tick tetris-piece))))
+
+  )
 (run-specs)
