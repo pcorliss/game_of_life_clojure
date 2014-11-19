@@ -1,36 +1,17 @@
-# game_of_life
+# Game Of Life in Clojure
 
-FIXME: description
+For the last session of [GDC14](http://globalday.coderetreat.org/) I
+paired with another developer on a Clojure implementation. My Clojure
+was rusty but we managed to get through some of the basics. When I got
+home I decided to try my hand and putting together a full implementation
+in Clojure.
 
-## Installation
-
-Download from http://example.com/FIXME.
+I'm currently looking for feedback on how I can refactor this code base
+to be both idiomatic, readable, and performant.
 
 ## Usage
-
-FIXME: explanation
-
-    $ java -jar game_of_life-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2014 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+```
+lein deps
+lein specs
+lein run
+```
