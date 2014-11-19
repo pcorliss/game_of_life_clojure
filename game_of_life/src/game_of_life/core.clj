@@ -12,16 +12,6 @@
   [our-key our-map]
   (or (-> our-key our-map) 0))
 
-(defn neighbor?
-  "Determines if two cells are neighbors"
-  [cell1 cell2]
-  (let [{x1 :x y1 :y} cell1]
-  (let [{x2 :x y2 :y} cell2]
-    (and
-      (not (= cell1 cell2))
-      (<= (Math/abs (- x1 x2)) 1)
-      (<= (Math/abs (- y1 y2)) 1)))))
-
 (defn cell-neighbors
   "returns a list of neighbors of a single cell"
   [cell]
@@ -44,30 +34,6 @@
   [acc cell]
   (merge acc {cell (+ 1 (map-get-int cell acc))}))
 
-(defn neighbor-counter
-  "takes a hash keyed by coords and increments based on neighbor pairs"
-  [acc cells]
-  (let [[cell1 cell2] cells]
-  (if (neighbor? cell1 cell2)
-    (incr_cell_count
-      (incr_cell_count acc cell1)
-      cell2)
-    acc)))
-
-(defn survive?
-  "applies game of life rules to a cell"
-  [cell]
-  (let [cell-neighbor-count (val cell)]
-  (and
-    (<  cell-neighbor-count 4)
-    (>= cell-neighbor-count 2 ))))
-
-(defn birth?
-  "decides whether a new cell should be created"
-  [cell]
-  (let [count (val cell)]
-  (= count 3)))
-
 (defn cell-neighbor-counter
   "takes a cell and increments a counter for all of its neighbors"
   [acc cell]
@@ -76,21 +42,28 @@
     acc
     (cell-neighbors cell)))
 
+(defn survive?
+  "applies game of life rules to a cell"
+  [cell-neighbor-count]
+    (and
+      (<  cell-neighbor-count 4)
+      (>= cell-neighbor-count 2 )))
+
+(defn birth?
+  "decides whether a new cell should be created"
+  [cell]
+  (let [count (val cell)]
+  (= count 3)))
+
 (defn tick
   "Increments the game state"
   [& cells]
+  (let [neighbor-count (reduce cell-neighbor-counter {} cells) ]
     (concat
       (keys
         (filter
           birth?
-          (reduce
-            cell-neighbor-counter
-            {}
-            cells)))
-      (keys
-        (filter
-          survive?
-          (reduce
-            neighbor-counter
-            {}
-            (or (combo/combinations cells 2) [] ))))))
+          neighbor-count))
+      (filter
+        #(survive? (map-get-int % neighbor-count))
+        cells))))
