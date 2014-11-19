@@ -2,14 +2,6 @@
   (:require [speclj.core :refer :all]
             [game-of-life.core :refer :all]))
 
-(describe "Truth"
-
-  (it "is true"
-    (should true))
-
-  (it "is not false"
-    (should-not false)))
-
 (describe "GameOfLife"
   (it "an empty game board returns an empty board"
     (should= [] (tick) ))
@@ -24,10 +16,10 @@
     (should= [{:x 1 :y 1}] (tick {:x 1 :y 1} {:x 0 :y 0} {:x 2 :y 2})))
 
   (it "a single cell lives with three neighbors"
-    (should= [{:x 1 :y 1}] (tick {:x 1 :y 1} {:x 0 :y 2} {:x 0 :y 0} {:x 2 :y 2})))
+    (should-contain {:x 1 :y 1} (tick {:x 1 :y 1} {:x 0 :y 2} {:x 0 :y 0} {:x 2 :y 2})))
 
   (it "a single cell dies with four neighbors"
-    (should= [] (tick {:x 1 :y 1} {:x 0 :y 2} {:x 2 :y 0} {:x 0 :y 0} {:x 2 :y 2})))
+    (should-not-contain {:x 1 :y 1} (tick {:x 1 :y 1} {:x 0 :y 2} {:x 2 :y 0} {:x 0 :y 0} {:x 2 :y 2})))
 
   (it "a single cell springs to life if it has three neighbors"
     (should= [{:x 1 :y 1}] (tick {:x 2 :y 0} {:x 0 :y 0} {:x 2 :y 2})))
@@ -46,11 +38,6 @@
     (should-not (neighbor? {:x  0 :y  0} {:x 0 :y 0}))
     (should-not (neighbor? {:x  0 :y  0} {:x 2 :y 0}))
     (should-not (neighbor? {:x  0 :y  0} {:x 0 :y 2})))
-
-  ;Any live cell with less than two live neighbours dies, as if caused by under-population.
-  ;Any live cell with two or three live neighbours lives on to the next generation.
-  ;Any live cell with more than three live neighbours dies, as if by overcrowding.
-  ;Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
   )
 
 (run-specs)
