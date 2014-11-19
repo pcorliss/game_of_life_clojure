@@ -2,11 +2,6 @@
   (:gen-class)
   (:require [clojure.math.combinatorics :as combo]))
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
-
 (defn map-get-int
   "Gets a value from a map defaults to zero"
   [our-key our-map]
@@ -57,7 +52,7 @@
 
 (defn tick
   "Increments the game state"
-  [& cells]
+  [cells]
   (let [neighbor-count (reduce cell-neighbor-counter {} cells) ]
     (concat
       (keys
@@ -67,3 +62,26 @@
       (filter
         #(survive? (map-get-int % neighbor-count))
         cells))))
+
+(def RESET "\33[2J")
+
+(defn print-grid
+  [x1 y1 x2 y2 cells]
+  ;(print (format "%s" RESET))
+  (let [cell-set (set cells)]
+    (doseq [y (range y1 y2)]
+      (doseq [x (range x1 x2)]
+        (if (contains? cell-set {:x x :y y})
+          (print "0")
+          (print " ")))
+      (println ""))
+    (flush)))
+
+
+(defn -main
+  "Displays and advances game of life"
+  [& args]
+  (loop [cells [{:x 3 :y 3} {:x 3 :y 4} {:x 4 :y 3} {:x 5 :y 3}]]
+    (print-grid 0 0 10 10 cells)
+    (Thread/sleep 1000)
+    (recur (tick cells))))
