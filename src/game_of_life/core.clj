@@ -2,11 +2,6 @@
   (:gen-class)
   (:require [clojure.math.combinatorics :as combo]))
 
-(defn map-get-int
-  "Gets a value from a map defaults to zero"
-  [our-key our-map]
-  (or (-> our-key our-map) 0))
-
 (defn cell-neighbors
   "returns a list of neighbors of a single cell"
   [cell]
@@ -27,7 +22,7 @@
 (defn incr_cell_count
   "takes a cell and increments the counter"
   [acc cell]
-  (merge acc {cell (+ 1 (map-get-int cell acc))}))
+  (assoc acc cell (inc (get acc cell 0))))
 
 (defn cell-neighbor-counter
   "takes a cell and increments a counter for all of its neighbors"
@@ -47,8 +42,7 @@
 (defn birth?
   "decides whether a new cell should be created"
   [cell]
-  (let [count (val cell)]
-  (= count 3)))
+  (= (val cell) 3))
 
 (defn tick
   "Increments the game state"
@@ -61,7 +55,7 @@
             birth?
             neighbor-count))
         (filter
-          #(survive? (map-get-int % neighbor-count))
+          #(survive? (get neighbor-count % 0))
           cells)))))
 
 (def RESET "\33[2J")
